@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#ffffff">
+    
+	<TextView android:layout_width="fill_parent"
+	    		android:layout_height="wrap_content"
+	    		android:text="Text To Speech"
+	    		android:padding="15dip"
+	    		android:textColor="#0587d9"
+	    		android:textSize="26dip"
+	    		android:gravity="center"
+	    		android:textStyle="bold"/>
+	
+    <EditText android:id="@+id/txtText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter some text to speak"
+        android:layout_marginTop="20dip"        
+        android:layout_margin="10dip"/>
+    
+    <Button android:id="@+id/btnSpeak" 
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:text="Speak Out" 
+        	android:layout_margin="10dip"/>
+
+</LinearLayout>
