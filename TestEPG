@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<e2eventlist>
+    <e2event>
+        <e2eventid>4873</e2eventid>
+        <e2eventstart>1330276500</e2eventstart>
+        <e2eventduration>6600</e2eventduration>
+        <e2eventcurrenttime>1330279058</e2eventcurrenttime>
+        <e2eventtitle>abc</e2eventtitle>
+        <e2eventdescription/>
+        <e2eventdescriptionextended>abcd</e2eventdescriptionextended>
+        <e2eventservicereference>1:0:1:19A:136:70:1680000:0:0:0:</e2eventservicereference>
+        <e2eventservicename>Disney </e2eventservicename>
+    </e2event>
+    <e2event>
+        <e2eventid>4967</e2eventid>
+        <e2eventstart>1330283100</e2eventstart>
+        <e2eventduration>3300</e2eventduration>
+        <e2eventcurrenttime>1330279058</e2eventcurrenttime>
+        <e2eventtitle>abc</e2eventtitle>
+        <e2eventdescription>aqbcd</e2eventdescription>
+        <e2eventdescriptionextended>abcdef</e2eventdescriptionextended>
+        <e2eventservicereference>1:0:1:19A:136:70:1680000:0:0:0:</e2eventservicereference>
+        <e2eventservicename>Disney </e2eventservicename>
+    </e2event>
+</e2eventlist>
