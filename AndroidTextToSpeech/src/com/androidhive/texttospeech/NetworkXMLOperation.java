@@ -2,6 +2,8 @@ package com.androidhive.texttospeech;
 
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.*;
 
 import javax.xml.parsers.*;
@@ -32,7 +34,7 @@ public class NetworkXMLOperation implements Runnable {
 		DocumentBuilder dBuilder;
 		Document doc = null;
 		Exception error = null;
-		
+
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			
