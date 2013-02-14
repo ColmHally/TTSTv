@@ -21,6 +21,20 @@
         android:layout_marginTop="20dip"        
         android:layout_margin="10dip"/>
     
+    <EditText android:id="@+id/IpText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter IP Address of box"
+        android:layout_marginTop="30dip"        
+        android:layout_margin="10dip"/>
+    
+    <EditText android:id="@+id/ApiTag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter End Tag"
+        android:layout_marginTop="40dip"        
+        android:layout_margin="10dip"/>
+    
     <Button android:id="@+id/btnSpeak" 
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
