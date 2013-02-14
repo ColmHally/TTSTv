@@ -12,7 +12,8 @@ public class NetworkXMLOperation implements Runnable {
 
 	private URL requestURL; // using a URL object ensures the requestURL is a valid URL
 	private Document xmlDoc;
-	private boolean completed = false;
+	private boolean completed = false,
+					cancelled = false;
 	private Callback callback;
 	private Response response;
 	private int ID;
@@ -117,6 +118,14 @@ public class NetworkXMLOperation implements Runnable {
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 	
 }

@@ -27,6 +27,12 @@ public class NetworkXMLOperationsQueue implements Runnable {
 				NetworkXMLOperation currentOp = operationsQueue.remove();
 				HashMap<String, Object> currentOpData = operationsMetadata.get(currentOp);
 				
+				if ( currentOp.isCancelled() ) {
+					operationsMetadata.remove( currentOp );
+					currentOp.getCallback().call( null ); // indicate operation cancelled
+					continue;
+				}
+				
 				Thread currentOpThread = new Thread( currentOp );
 				
 				currentOpThread.start();

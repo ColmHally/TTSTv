@@ -10,12 +10,9 @@ public class E2Service {
 	private String 	sRef = "",
 					name = "";
 	
-	private ArrayList<E2Service> serviceList;
-
-	public E2Service( String sRef, String name, ArrayList<E2Service> serviceList ) {
+	public E2Service( String sRef, String name) {
 		setSRef( sRef );
 		setName( name );
-		setServiceList( serviceList );
 	}
 	
 	public String getSRef() {
@@ -33,14 +30,6 @@ public class E2Service {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public ArrayList<E2Service> getServiceList() {
-		return serviceList;
-	}
-
-	public void setServiceList(ArrayList<E2Service> serviceList) {
-		this.serviceList = serviceList;
-	}
 	
 	public static E2Service serviceFromXMLNode( Node serviceNode ) {
 		E2Service service = null;
@@ -48,9 +37,10 @@ public class E2Service {
 		if ( serviceNode == null || serviceNode.getNodeName() != "e2service" )
 			return null;
 		
-		String name = getTagValue( "e2servicename", serviceNode );
+		String	serviceRef = getTagValue( "e2servicereference", serviceNode ),
+				name = getTagValue( "e2servicename", serviceNode );
 		
-		return service;
+		return new E2Service( serviceRef, name );
 	}
 	
 	private static String getTagValue( String tagName, Node node ) {
