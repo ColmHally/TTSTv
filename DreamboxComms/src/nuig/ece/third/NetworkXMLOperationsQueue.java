@@ -55,6 +55,9 @@ public class NetworkXMLOperationsQueue implements Runnable {
 				if ( currentOpResponse.getError() != null || currentOp.isCompleted() == false ) {
 					Integer numRetries = (Integer) currentOpData.get("retries");
 					
+					if ( currentOpResponse.getError() == null )
+						currentOpResponse.setError( new Exception( "Timed Out!" ) );
+					
 					currentOp.log("Retries: " + numRetries);
 					
 					currentOp.log("Error detected: " + currentOpResponse.getError().getMessage() );
