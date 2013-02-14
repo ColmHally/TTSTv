@@ -27,18 +27,18 @@ public class DreamboxComms implements Runnable {
 		pool.execute( comms );
 	}
 	
-	public void run() {		
+	public void run() { // demonstrates how you might use the network operations queue in an app		
 		Scanner sc = new Scanner(System.in);
 		boolean stop = false;
 		
-		System.out.print( "Enter IP Address of Dreambox <or 'auto'>: " );
+		System.out.println( "Enter IP Address of Dreambox <or 'auto'>: " );
 		dreamboxIP = sc.next();
 		
 		if ( dreamboxIP.equalsIgnoreCase( "auto" ) )
-			dreamboxIP = "192.168.1.119";
+			dreamboxIP = "172.20.10.10";
 		
 		while ( stop == false ) {
-			System.out.print( "Enter API endpoint of query <or 'exit'>: " );
+			System.out.println( "Enter API endpoint of query <or 'exit'>: " );
 			
 			String endpoint = sc.next();
 			
@@ -50,50 +50,20 @@ public class DreamboxComms implements Runnable {
 			String url = getDreamboxURL( endpoint );
 			
 			try {
-				operationsQueue.addOperation( url, new Callback() {
-					public void run( Response response ) {
+				operationsQueue.add( url, new Callback() {
+					public void call( Response response ) {
 						System.out.println( "\n\n" + response );
 					}
 				});
 			} catch (MalformedURLException e) {
 				System.err.println( "URL: " + url + " is not a valid URL!" );
+			} catch (InvalidDreamboxAPICallException e) {
+				System.err.println( "Endpoint: " + e.getEndpoint() + " is not supported!" );
 			}
 			
 		}
 	
 		System.exit( 0 );
-	}
-	
-	public static Response parseXMLURL( String xmlURL ) {
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
-		Document doc = null;
-		Response response = null;
-		
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			
-			doc = dBuilder.parse( xmlURL );
-			doc.getDocumentElement().normalize();
-			
-		} catch (ParserConfigurationException e) {
-			System.err.println( e.getMessage() );
-			response = new Response( xmlURL, null, null, e );
-			
-		} catch (SAXException e) { //! TODO: Network Errors
-			System.err.println( e.getMessage() );
-			response = new Response( xmlURL, null, null, e );
-			
-		} catch (IOException e) {
-			System.err.println( e.getMessage() );
-			response = new Response( xmlURL, null, null, e );
-			
-		}
-		
-		if ( response == null )
-			response = new Response( xmlURL, null, doc, null );
-		
-		return response;
 	}
 	
 	public static void findDreambox( Callback callback ) {

@@ -1,7 +1,7 @@
 package nuig.ece.third;
 
-public class EPG {
-	private static final int 	VOLUME_UP = 115,
-								VOLUME_DOWN = 114,
-								POWER_TOGGLE = 116;
+import java.util.*;
+
+public class EPG <T> {
+	
 }

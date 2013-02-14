@@ -12,7 +12,6 @@ public class NetworkXMLOperation implements Runnable {
 
 	private URL requestURL; // using a URL object ensures the requestURL is a valid URL
 	private Document xmlDoc;
-	private Long startTime;
 	private boolean completed = false;
 	private Callback callback;
 	private Response response;
@@ -27,6 +26,8 @@ public class NetworkXMLOperation implements Runnable {
 	}
 	
 	public void run() {
+		log( "running.." );
+		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
 		Document doc = null;
@@ -35,23 +36,15 @@ public class NetworkXMLOperation implements Runnable {
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			
-			setStartTime(System.currentTimeMillis());
-			
+			log("parsing..");
 			doc = dBuilder.parse( requestURL.toString() );
 			doc.getDocumentElement().normalize();
 			
 		} catch ( Exception e ) {
+			logError("error in parsing - " + e.getClass());
 			error = e;
-			System.err.println( e.getMessage() );
+			logError( e.getMessage() );
 		}
-		
-		/*catch (ParserConfigurationException e) {
-			System.err.println( e.getMessage() );
-		} catch (SAXException e) {
-			System.err.println( e.getMessage() );
-		} catch (IOException e) {
-			System.err.println( e.getMessage() );
-		}*/
 		
 		if ( error != null )
 			response = new Response( requestURL.toString(), null, null, error );
@@ -59,7 +52,29 @@ public class NetworkXMLOperation implements Runnable {
 		else if ( doc != null )
 			response = new Response( requestURL.toString(), null, doc, null );
 		
+		log("completed");
+		
 		completed = true;
+	}
+	
+	// Log
+	
+	public void logError( String msg ) {
+		log( msg, true );
+	}
+	
+	public void log( String msg ) {
+		log( msg, false );
+	}
+	
+	public void log( String msg, boolean error ) {
+		msg = "NW Op " + ID + ": " + msg;
+		
+		if ( !error )
+			System.out.println(msg);
+		
+		else
+			System.err.println(msg);
 	}
 
 	// Accessors
@@ -83,21 +98,17 @@ public class NetworkXMLOperation implements Runnable {
 	public Callback getCallback() {
 		return callback;
 	}
-
+	
+	void setCompleted( boolean completed ) {
+		this.completed = completed; 
+	}
+	
 	public boolean isCompleted() {
 		return completed;
 	}
 
 	public Response getResponse() {
 		return response;
-	}
-
-	public Long getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Long startTime) {
-		this.startTime = startTime;
 	}
 
 	public int getID() {
