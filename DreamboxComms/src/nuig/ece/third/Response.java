@@ -5,10 +5,10 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
 public class Response {
-	private String 		responseText,
-						URL;
-	private Document	responseXML;
-	private Exception	error;
+	private String 		responseText = null,
+						URL = null;
+	private Document	responseXML = null;
+	private Exception	error = null;
 	
 	public Response( String URL, String responseText, Document responseXML, Exception error ) {
 		this.URL = URL;
@@ -17,6 +17,10 @@ public class Response {
 		this.error = error;
 	}
 	
+	public Response( String URL ) {
+		setURL( URL );	
+	}
+
 	public static String getStringFromDoc(Document doc)    {
 	    DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
 	    LSSerializer lsSerializer = domImplementation.createLSSerializer();

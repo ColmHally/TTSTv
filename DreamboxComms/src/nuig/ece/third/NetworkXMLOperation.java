@@ -28,6 +28,7 @@ public class NetworkXMLOperation implements Runnable {
 	
 	public void run() {
 		log( "running.." );
+		response = new Response( requestURL.toString() );
 		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
@@ -48,10 +49,10 @@ public class NetworkXMLOperation implements Runnable {
 		}
 		
 		if ( error != null )
-			response = new Response( requestURL.toString(), null, null, error );
+			response.setError(error);
 		
 		else if ( doc != null )
-			response = new Response( requestURL.toString(), null, doc, null );
+			response.setResponseXML(doc);
 		
 		log("completed");
 		
