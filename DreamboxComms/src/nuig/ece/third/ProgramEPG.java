@@ -1,10 +1,11 @@
 package nuig.ece.third;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public class ProgramEPG implements Comparable<ProgramEPG> {
 	
-	private String title = "", description = "", serviceRef = "";
+	private String title = "", description = "";
 	private Date startDate, endDate;
 	
 	// Constructor
@@ -19,6 +20,12 @@ public class ProgramEPG implements Comparable<ProgramEPG> {
 	// Comparable interface
 	public int compareTo(ProgramEPG program) {
 		return (int) (getStartDate().getTime() - program.getStartDate().getTime());
+	}
+	
+	// toString
+	
+	public String toString() {
+		return "Program: " + title + " from " + startDate + " to " + endDate + "\n\"" + description + "\"";
 	}
 	
 	// Accessors

@@ -38,10 +38,14 @@ public class NetworkXMLOperationsQueue implements Runnable {
 				currentOpThread.start();
 				
 				boolean timedOut = false;
-				Long startTime = (Long) currentOpData.get("startTime");
+				Long 	startTime = (Long) currentOpData.get("startTime"),
+						timeOut = (Long) (currentOpData.get( "timeOutTime" ) == null ? timeOutTime :
+										currentOpData.get( "timeOutTime" ));
+				
+				System.out.println( "Time Out in " + timeOut + "ms" );
 				
 				while ( !currentOp.isCompleted() && !timedOut ) {
-					if ( System.currentTimeMillis() - startTime > timeOutTime ) {
+					if ( System.currentTimeMillis() - startTime > timeOut ) {
 						timedOut = true;
 						continue;
 					}
@@ -52,6 +56,13 @@ public class NetworkXMLOperationsQueue implements Runnable {
 				
 				Response currentOpResponse = currentOp.getResponse();
 				
+				if (currentOpResponse == null) { //! FIXME: there should never be a null Response on a NWXML Op
+					currentOpResponse = new Response( currentOp.getRequestURL().toString() );
+					currentOpResponse.setError(new Exception("Returned null response"));
+				}
+				
+				System.out.println( currentOpResponse ==  null );
+				
 				if ( currentOpResponse.getError() != null || currentOp.isCompleted() == false ) {
 					Integer numRetries = (Integer) currentOpData.get("retries");
 					
@@ -60,16 +71,17 @@ public class NetworkXMLOperationsQueue implements Runnable {
 					
 					currentOp.log("Retries: " + numRetries);
 					
-					currentOp.log("Error detected: " + currentOpResponse.getError().getMessage() );
+//					currentOp.logError("Error detected: " + currentOpResponse.getError().getMessage() );
 					
 					if ( numRetries.intValue() >= maxRetries ) {
 						TooManyRetriesException tmr = new TooManyRetriesException("NW Op " + currentOp.getID() + " - " + currentOp.getRequestURL() + " failed too many times!");
 					
 						currentOpResponse.setError( tmr );
-						
-						currentOp.getCallback().call( currentOpResponse );
 						operationsMetadata.remove(currentOp);
 						
+						currentOp.getCallback().call( currentOpResponse );
+						
+						currentOp.setCancelled( true );
 						currentOpThread.interrupt();
 						currentOpThread = null;
 					
@@ -90,6 +102,7 @@ public class NetworkXMLOperationsQueue implements Runnable {
 					currentOpThread = null;
 					
 					currentOp.getCallback().call( currentOp.getResponse() );
+					currentOp.setCancelled(true);
 				}
 				
 			} else {
@@ -119,6 +132,9 @@ public class NetworkXMLOperationsQueue implements Runnable {
 		
 		opData.put("startTime", System.currentTimeMillis());
 		opData.put("retries", new Integer(0));
+		
+		if ( requestURL.contains( "epgservice" ) )
+			opData.put( "timeOutTime", 35000L );
 		
 		operationsMetadata.put(operation, opData);
 		

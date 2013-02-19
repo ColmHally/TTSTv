@@ -21,13 +21,24 @@ public class NetworkXMLOperation implements Runnable {
 	public NetworkXMLOperation( int id, URL requestURL, Callback callback ) {
 		super();
 		
+		if (callback == null)
+			callback = new Callback() {
+				public void call( Response response ) {
+					return;
+				}
+			};
+		
 		this.requestURL = requestURL;
 		this.callback = callback;
 		this.setID(id);
 	}
 	
 	public void run() {
-		log( "running.." );
+		log( "running.. - " + requestURL.toString() );
+		
+		if ( isCancelled() )
+			return;
+		
 		response = new Response( requestURL.toString() );
 		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

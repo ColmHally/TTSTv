@@ -9,12 +9,18 @@ public class Response {
 						URL = null;
 	private Document	responseXML = null;
 	private Exception	error = null;
+	private Object		data = null;
 	
 	public Response( String URL, String responseText, Document responseXML, Exception error ) {
-		this.URL = URL;
-		this.responseText = responseText;
+		setURL(URL);
+		setResponseText( responseText );
 		setResponseXML( responseXML );
-		this.error = error;
+		setError( error );
+	}
+	
+	public Response( Object data, Exception error ) {
+		setData( data );
+		setError( error );
 	}
 	
 	public Response( String URL ) {
@@ -69,6 +75,14 @@ public class Response {
 	
 	public Exception getError() {
 		return error;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 
 }
