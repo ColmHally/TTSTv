@@ -1,12 +1,10 @@
 package nuig.ece.third;
 
-import java.io.IOException;
 import java.net.*;
 
 import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 public class NetworkXMLOperation implements Runnable {
 

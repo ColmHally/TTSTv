@@ -3,8 +3,9 @@ package nuig.ece.third;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ProgramEPG implements Comparable<ProgramEPG> {
+public class ProgramEPG implements Comparable<ProgramEPG>, Serializable  {
 	
+	private static final long serialVersionUID = 1L;
 	private String title = "", description = "";
 	private Date startDate, endDate;
 	

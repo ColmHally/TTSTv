@@ -1,7 +1,6 @@
 package nuig.ece.third;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,14 +9,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DreamboxComms implements Runnable {
 	private static String dreamboxIP = null;
 	private static NetworkXMLOperationsQueue operationsQueue;
+	
 	private static boolean findingIP = false;
 	private static ArrayList<NetworkXMLOperation> findOps;
+	private static ConcurrentLinkedQueue<Callback> findingCallbackQueue;
 	
 	// main and run are for testing purposes - disregard on android
 	
@@ -93,6 +95,13 @@ public class DreamboxComms implements Runnable {
 	
 	
 	public static void discoverDreambox( final Callback callback ) {
+		if (findingCallbackQueue ==  null)
+			findingCallbackQueue =  new ConcurrentLinkedQueue<Callback>();
+		
+		
+		if (callback != null)
+			findingCallbackQueue.add( callback );
+		
 		if (findingIP == true)
 			return;
 		
@@ -120,22 +129,51 @@ public class DreamboxComms implements Runnable {
 				
 				System.out.print( "Dreambox Ip is: " + dreamboxIP + "\n");
 				
-				if (callback != null)
-					callback.call( new Response( dreamboxIP, dreamboxIP, null, null ) );
+				Response resp = new Response( dreamboxIP, dreamboxIP, null, null );
+				
+				while ( findingCallbackQueue.isEmpty() == false )
+					findingCallbackQueue.remove().call( resp );
 			}
 		}).start();
 		
 	}
 	
+	public void getVolume( Callback volCallback ) throws Exception {
+		try {
+			queryAPIEndpoint( "vol", "", volCallback );
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public void changeVolume( int vol, Callback volCallback ) throws Exception {
+		if ( vol < 0 || vol > 100 )
+			throw new IndexOutOfBoundsException( "Volume must be between 0 and 100." );
+		
+		try {
+			queryAPIEndpoint( "vol", "set=set" + vol, volCallback );
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public void toggleMute( Callback muteCallback ) throws Exception {
+		try {
+			queryAPIEndpoint( "vol", "set=mute", muteCallback );
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 	public static NetworkXMLOperation queryAPIEndpoint( String endpoint, String args, Callback callback ) throws MalformedURLException, InvalidDreamboxAPICallException {
-		String URL = composeDreamboxURL( endpoint + "?" + args );
+		String URL = composeDreamboxURL( endpoint + (args == null ? "" :  "?" + args ) );
 		
 		return operationsQueue.add( URL, callback );
 	}
 	
 	public static void sendMessage( String msg ) {
 		try {
-			queryAPIEndpoint( "message", "text=" + URLEncoder.encode( msg, "UTF-8" ) + "&type=3&timeout=10", null );
+			queryAPIEndpoint( "message", "text=" + URLEncoder.encode( msg, "UTF-8" ) + "&type=1&timeout=8", null );
 			
 		} catch (Exception e) {
 			System.err.println( "Couldn't print message: " + msg );

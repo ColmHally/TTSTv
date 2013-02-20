@@ -1,7 +1,5 @@
 package nuig.ece.third;
 
-import java.util.ArrayList;
-
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -31,25 +29,28 @@ public class E2Service {
 		this.name = name;
 	}
 	
-	public static E2Service serviceFromXMLNode( Node serviceNode ) {
-		E2Service service = null;
+	public static E2Service newServiceFromXMLNode( Node serviceNode ) {
+		Node	nameNode = getE2Node( serviceNode, "name" ),
+				sRefNode = getE2Node( serviceNode, "reference" );
 		
-		if ( serviceNode == null || serviceNode.getNodeName() != "e2service" )
-			return null;
-		
-		String	serviceRef = getTagValue( "e2servicereference", serviceNode ),
-				name = getTagValue( "e2servicename", serviceNode );
-		
-		return new E2Service( serviceRef, name );
+		return new E2Service( sRefNode.getTextContent(), nameNode.getTextContent() );
 	}
 	
-	private static String getTagValue( String tagName, Node node ) {
-		if ( node.getNodeType() != Node.ELEMENT_NODE ) 
+	private static Node getE2Node( Node parentNode, String nodeName ) {		
+		if ( parentNode.getNodeType() != Node.ELEMENT_NODE )
 			return null;
 		
-		Element element = (Element)node;
+		nodeName = "e2service" + nodeName;
 		
-		return "";
+		Element parentElement = (Element)parentNode; 
+		
+		NodeList nodes = parentElement.getElementsByTagName(nodeName);
+		
+		if ( nodes.getLength() > 0 )
+			return nodes.item( 0 );
+		
+		return null;
 	}
+
 	
 }

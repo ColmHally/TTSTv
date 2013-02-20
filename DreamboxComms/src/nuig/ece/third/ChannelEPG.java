@@ -1,11 +1,13 @@
 package nuig.ece.third;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class ChannelEPG {
+public class ChannelEPG implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String name = "",
 			serviceRef = "";
 	private ArrayList<ProgramEPG> programList;
@@ -15,7 +17,7 @@ public class ChannelEPG {
 		setName( name );
 		setServiceRef( sRef );
 		
-		Collections.sort( programs );
+		Collections.sort( programs, new ProgramEPGComparator() );
 		
 		setProgramList( programs );
 	}
